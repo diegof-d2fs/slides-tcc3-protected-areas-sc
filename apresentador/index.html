@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<base href="../">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Apresentador] Defesa TCC III</title>
+<link rel="icon" href="assets/img/univali-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Public+Sans:wght@500;600;650;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/deck.css?v=20261123f">
+</head>
+<body data-mode="presenter">
+
+<!-- ============================== BARRA SUPERIOR ============================== -->
+<header class="ui-bar" id="uiBar">
+  <button class="ui-btn" id="btnMenu" aria-label="Abrir menu de slides" title="Menu (M)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span class="lbl">Menu</span>
+  </button>
+  <div class="brand">
+    <div><b>Apresentador · Defesa TCC III</b><small id="syncState" class="sync">Tela do público não aberta</small></div>
+  </div>
+  <button class="ui-btn" id="btnGrid" aria-pressed="false" title="Visão geral (G)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="lbl">Visão geral</span>
+  </button>
+  <button class="ui-btn" id="btnAudience" title="Abrir a tela do público em outra janela (O)" style="background:var(--amber);color:#fff;border-color:var(--amber)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span class="lbl">Abrir tela do público</span>
+  </button>
+  <span class="ui-sep"></span>
+  <button class="ui-btn icon hide-sm" id="btnPrint" title="Imprimir ou salvar em PDF">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+  </button>
+  <button class="ui-btn icon" id="btnHelp" title="Atalhos (?)">?</button>
+  <button class="ui-btn" id="btnFull" title="Tela cheia (F)" style="background:var(--navy);color:#fff;border-color:var(--navy)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg><span class="lbl">Apresentar</span>
+  </button>
+</header>
+
+<!-- ============================== PALCO ============================== -->
+<main class="stage" id="stage">
+  <div class="viewport" id="viewport">
+<!-- Slides principais são carregados de ../index.html. Abaixo, apenas os slides de apoio. -->
+<!-- =====================================================================
+     APÊNDICE · SLIDES DE APOIO PARA A ARGUIÇÃO
+     ===================================================================== -->
+<section class="slide" data-appendix data-title="Comparação entre produtos" data-section="Apêndice">
+  <div class="kicker">Apoio · Seção 1.2.1</div>
+  <h1 class="s-title">A proposta complementa as plataformas existentes</h1>
+  <div class="s-content">
+    <table class="tbl">
+      <thead><tr><th>Base</th><th>Responsável</th><th>Uso no produto</th></tr></thead>
+      <tbody>
+        <tr class="chosen"><th>MapBiomas Alerta e Uso ✓</th><td>Rede MapBiomas</td><td>Série desde 1985 e alertas validados</td></tr>
+        <tr class="chosen"><th>PRODES ✓</th><td>INPE</td><td>Desmatamento anual oficial</td></tr>
+        <tr class="chosen"><th>FIRMS (MODIS e VIIRS) ✓</th><td>NASA</td><td>Acrescenta o tema fogo</td></tr>
+        <tr><th>DETER</th><td>INPE</td><td>Fiscalização, não substitui o PRODES</td></tr>
+        <tr><th>TerraBrasilis</th><td>INPE</td><td>Portal de distribuição, não é pipeline</td></tr>
+        <tr><th>i3Geo</th><td>MMA</td><td>Visualização, não prepara nem versiona</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="slide" data-appendix data-title="Modelo lógico" data-section="Apêndice">
+  <div class="kicker">Apoio · Seção 2.1.6</div>
+  <h1 class="s-title">Identidade territorial estável, geometrias versionadas</h1>
+  <div class="s-content">
+    <div class="row grow">
+      <figure class="fig" style="flex:1.3">
+        <div class="imgbox"><img src="assets/img/figure-2.png" alt="Modelo lógico-relacional do banco de dados com tipos geoespaciais"></div>
+        <figcaption><b>Figura 2</b> · Modelo lógico-relacional (Autor, 2026)</figcaption>
+      </figure>
+      <ul class="list" style="flex:1;justify-content:center">
+        <li><span class="b">1</span><p>UC com várias versões geométricas e de entorno</p></li>
+        <li><span class="b">2</span><p>Recortes ligados à UC, à ZA ou ao Buffer</p></li>
+        <li><span class="b">3</span><p>Auditoria fora do contrato público</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-appendix data-title="DAGs no Airflow" data-section="Apêndice">
+  <div class="kicker">Apoio · Seção 2.2.2</div>
+  <h1 class="s-title">Doze DAGs, dois regimes complementares</h1>
+  <div class="s-content">
+    <figure class="fig grow">
+      <div class="imgbox"><img src="assets/img/figure-8.png" alt="Visão geral da interface do Apache Airflow com as DAGs do produto"></div>
+      <figcaption><b>Figura 8</b> · Visão geral da interface do Airflow (Autor, 2026)</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="slide" data-appendix data-title="Qualidade e rastreabilidade" data-section="Apêndice">
+  <div class="kicker">Apoio · Seção 3.6</div>
+  <h1 class="s-title">Cada carga informa o que entrou e por que houve descarte</h1>
+  <div class="s-content">
+    <div class="row grow">
+      <figure class="fig" style="flex:1.1">
+        <div class="imgbox"><img src="assets/img/figure-16.png" alt="Dicionário de dados das bases de envio na interface web"></div>
+        <figcaption><b>Figura 16</b> · Dicionário de dados das bases de envio (Autor, 2026)</figcaption>
+      </figure>
+      <ul class="list" style="flex:1;justify-content:center">
+        <li><span class="b">1</span><p>Formato, CRS e geometria validados na entrada</p></li>
+        <li><span class="b">2</span><p>summary.json com lidos, inseridos e descartados</p></li>
+        <li><span class="b">3</span><p>Correlação da solicitação até o evento cadastral</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-appendix data-title="Importação com máquina desligada" data-section="Apêndice">
+  <div class="kicker">Apoio · Seção 3.8.1</div>
+  <h1 class="s-title">A API aceita a importação e liga o processamento</h1>
+  <div class="s-content">
+    <figure class="fig grow">
+      <div class="imgbox"><img src="assets/img/figure-21.png" alt="Diagrama de sequência da importação cadastral com a máquina de processamento desligada"></div>
+      <figcaption><b>Figura 21</b> · Importação cadastral com a máquina de processamento desligada (Autor, 2026)</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="slide" data-appendix data-title="Composição do custo" data-section="Apêndice">
+  <div class="kicker">Apoio · Quadro 28 · preços de 30/09/2026</div>
+  <h1 class="s-title">O custo vai além da máquina de processamento</h1>
+  <div class="s-content">
+    <table class="tbl">
+      <thead><tr><th>Componente</th><th style="text-align:right">US$/mês</th></tr></thead>
+      <tbody>
+        <tr><td>Máquina de serviço t3a.small contínua</td><td class="num">18,97</td></tr>
+        <tr><td>RDS PostgreSQL/PostGIS + IPv4</td><td class="num">16,79</td></tr>
+        <tr><td>Disco de processamento 100 GB</td><td class="num">8,00</td></tr>
+        <tr><td>Processamento t3a.large, cerca de 50 h</td><td class="num">4,01</td></tr>
+        <tr><td>Armazenamento do banco 20 GB</td><td class="num">2,30</td></tr>
+        <tr><td>Domínio, DNS e CloudFront</td><td class="num">1,83</td></tr>
+        <tr><td>S3 e imagens, logs e alertas</td><td class="num">1,80</td></tr>
+      </tbody>
+      <tfoot><tr><td>Total estimado (câmbio R$ 5,50)</td><td class="num">53,70</td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section class="slide" data-appendix data-title="Tempos da carga de referência" data-section="Apêndice">
+  <div class="kicker">Apoio · Seção 3.8.5</div>
+  <h1 class="s-title">Inclusão de uma UC nova na AWS, em 04/10/2026</h1>
+  <div class="s-content">
+    <div class="cards c4">
+      <div class="metric"><div class="num">2 <small>min</small> 37 <small>s</small></div><div class="lbl">MapBiomas Alerta</div></div>
+      <div class="metric"><div class="num">8 <small>min</small> 22 <small>s</small></div><div class="lbl">FIRMS, recruzamento</div></div>
+      <div class="metric"><div class="num">21 <small>min</small> 58 <small>s</small></div><div class="lbl">PRODES</div></div>
+      <div class="metric"><div class="num">64 <small>min</small> 6 <small>s</small></div><div class="lbl">MapBiomas Uso</div></div>
+    </div>
+    <div class="callout navy"><p>71 min 16 s da Bronze à última sincronização, com os temas em paralelo.</p></div>
+    <p class="note">O MapBiomas incluiu a geração inicial da Silver. Em 01/11/2026, o cadastro completo entrou num único lote de 174 UCs.</p>
+  </div>
+</section>
+
+<section class="slide" data-appendix data-title="Consumo no Power BI" data-section="Apêndice">
+  <div class="kicker">Apoio · Seção 3.7.3</div>
+  <h1 class="s-title">A preparação territorial ocorre antes da visualização</h1>
+  <div class="s-content">
+    <figure class="fig grow">
+      <div class="imgbox"><img src="assets/img/BI.png" alt="Painel Power BI consumindo os resultados geoespaciais preparados"></div>
+      <figcaption>Painel Power BI conectado às views do schema reporting</figcaption>
+    </figure>
+  </div>
+</section>
+
+  </div>
+</main>
+
+<!-- ============================== NAVEGAÇÃO ============================== -->
+<div class="nav-pill" id="navPill">
+  <button id="btnPrev" aria-label="Slide anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <span class="count" id="counter">01 / 19</span>
+  <button id="btnNext" aria-label="Próximo slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></button>
+</div>
+<div class="progress" id="progress"></div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Menu de slides">
+  <header><b>Slides</b><button class="ui-btn icon" id="btnCloseMenu" aria-label="Fechar menu">✕</button></header>
+  <nav id="drawerNav"></nav>
+  <div class="foot">Atalhos: tecla <kbd>?</kbd></div>
+</aside>
+
+<section class="overview" id="overview" aria-label="Visão geral"><div class="grid" id="overviewGrid"></div></section>
+
+
+<aside class="notes-panel" id="notesPanel" aria-label="Roteiro do apresentador">
+  <div class="notes-head">
+    <div class="timer-row">
+      <span class="clock" id="clock">00:00</span>
+      <button class="ui-btn" id="btnTimer">Iniciar</button>
+      <button class="ui-btn" id="btnTimerReset">Zerar</button>
+    </div>
+    <div class="budget" id="budget"></div>
+  </div>
+  <div class="next-wrap" id="nextBox"></div>
+  <div class="notes-body" id="notesBody"></div>
+</aside>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Imagem em tela cheia">
+  <div class="lb-top">
+    <span class="lb-cap" id="lbCap"></span>
+    <button class="ui-btn" id="lbOut" aria-label="Diminuir zoom">−</button>
+    <button class="ui-btn" id="lbReset">Ajustar</button>
+    <button class="ui-btn" id="lbIn" aria-label="Aumentar zoom">+</button>
+    <a class="ui-btn" id="lbOpen" target="_blank" rel="noopener">Abrir original</a>
+    <button class="ui-btn lb-close" id="lbClose" aria-label="Fechar imagem (Esc)">✕</button>
+  </div>
+  <div class="lb-canvas" id="lbCanvas"><img id="lbImg" alt=""></div>
+  <div class="lb-hint">Roda do mouse ou + / − para zoom · arraste para mover · duplo clique alterna zoom · Esc ou ✕ para voltar</div>
+</div>
+
+<div class="help" id="help">
+  <div class="card">
+    <h3>Atalhos</h3>
+    <table>
+      <tr><td><kbd>→</kbd> <kbd>Espaço</kbd> <kbd>PgDn</kbd></td><td>Próximo slide</td></tr>
+      <tr><td><kbd>←</kbd> <kbd>PgUp</kbd></td><td>Slide anterior</td></tr>
+      <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>Primeiro / último slide principal</td></tr>
+      <tr><td><kbd>S</kbd></td><td>Ir ao sumário</td></tr>
+      <tr><td><kbd>M</kbd></td><td>Menu de slides</td></tr>
+      <tr><td><kbd>G</kbd></td><td>Visão geral</td></tr>
+      <tr><td><kbd>F</kbd></td><td>Tela cheia</td></tr>
+      <tr><td><kbd>O</kbd></td><td>Abrir a tela do público (sincronizada)</td></tr>
+      <tr><td><kbd>T</kbd></td><td>Iniciar ou pausar o cronômetro</td></tr>
+      <tr><td><kbd>A</kbd> + número + <kbd>Enter</kbd></td><td>Ir a um slide de apoio (ex.: A3)</td></tr>
+                        <tr><td><kbd>Esc</kbd></td><td>Fechar imagem, menu ou painel</td></tr>
+      <tr><td>Clique na figura</td><td>Abre em tela cheia com zoom</td></tr>
+    </table>
+    <p style="margin:14px 0 0;font-size:14px;color:var(--muted)">Digite um número e Enter para ir direto ao slide.</p>
+  </div>
+</div>
+
+<script src="apresentador/roteiro.js?v=20261123f"></script>
+<script src="assets/js/deck.js?v=20261123f"></script>
+</body>
+</html>

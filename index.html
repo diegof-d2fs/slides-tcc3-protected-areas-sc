@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defesa TCC III · Diego Fonseca da Silva</title>
+<meta name="description" content="Defesa do TCC III: Orquestração de um Pipeline End-to-End de Dados Geoespaciais sobre Unidades de Conservação em Santa Catarina. UNIVALI, novembro de 2026.">
+<meta property="og:title" content="Defesa TCC III · Pipeline geoespacial de UCs em SC">
+<meta property="og:description" content="Orquestração de um Pipeline End-to-End de Dados Geoespaciais sobre Unidades de Conservação em Santa Catarina.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="assets/img/univali-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Public+Sans:wght@500;600;650;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/deck.css?v=20261123f">
+</head>
+<body data-mode="audience">
+
+<!-- ============================== BARRA SUPERIOR ============================== -->
+<header class="ui-bar" id="uiBar">
+  <button class="ui-btn" id="btnMenu" aria-label="Abrir menu de slides" title="Menu (M)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span class="lbl">Menu</span>
+  </button>
+  <div class="brand">
+    <div><b>Defesa TCC III</b><small>Diego Fonseca da Silva · UNIVALI · Ciência da Computação</small></div>
+  </div>
+  <button class="ui-btn" id="btnGrid" aria-pressed="false" title="Visão geral (G)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="lbl">Visão geral</span>
+  </button>
+  <span class="ui-sep"></span>
+  <button class="ui-btn icon hide-sm" id="btnPrint" title="Imprimir ou salvar em PDF">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+  </button>
+  <button class="ui-btn icon" id="btnHelp" title="Atalhos (?)">?</button>
+  <button class="ui-btn" id="btnFull" title="Tela cheia (F)" style="background:var(--navy);color:#fff;border-color:var(--navy)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg><span class="lbl">Apresentar</span>
+  </button>
+</header>
+
+<!-- ============================== PALCO ============================== -->
+<main class="stage" id="stage">
+  <div class="viewport" id="viewport">
+
+<!-- =====================================================================
+     01 · CAPA
+     ===================================================================== -->
+<section class="slide" data-bare data-title="Capa" data-section="Abertura">
+  <div class="cover">
+    <div class="top">
+      <div class="logo"><img src="assets/img/univali-logo.png" alt="Logotipo da UNIVALI"></div>
+      <div class="inst">Universidade do Vale do Itajaí<br>Escola Politécnica · Ciência da Computação</div>
+    </div>
+    <div class="label">Trabalho de Conclusão de Curso III · Produto tecnológico</div>
+    <h1>Orquestração de um Pipeline <em>End-to-End</em> de Dados Geoespaciais</h1>
+    <h2>sobre Unidades de Conservação em Santa Catarina</h2>
+    <div class="people">
+      <div><span>Acadêmico</span><strong>Diego Fonseca da Silva</strong></div>
+      <div><span>Orientador</span><strong>Rafael Ballottin Martins</strong></div>
+      <div><span>Local e data</span><strong>Itajaí (SC), novembro de 2026</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     02 · ROTEIRO (sumário clicável)
+     ===================================================================== -->
+<section class="slide" data-title="Sumário" data-section="Abertura" data-toc>
+  <div class="kicker">Sumário</div>
+  <h1 class="s-title">Roteiro da apresentação</h1>
+  <div class="s-content">
+    <div class="toc" id="tocGrid"><!-- preenchido pelo deck.js --></div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     03 · CONTEXTO E JUSTIFICATIVA
+     ===================================================================== -->
+<section class="slide" data-title="Contexto e justificativa" data-section="Problema">
+  <div class="kicker">Contexto e justificativa</div>
+  <h1 class="s-title">As fontes são abertas, mas ainda não são evidência territorial</h1>
+  <div class="s-content">
+    <div class="row grow">
+      <ul class="points" style="flex:1.05">
+        <li><span class="i">01</span><div><h3>186 UCs em Santa Catarina</h3><p>85 federais, 52 estaduais e 49 municipais, com entornos que exigem análise.</p></div></li>
+        <li><span class="i">02</span><div><h3>Bases generalistas e heterogêneas</h3><p>PRODES, MapBiomas e FIRMS são nacionais ou globais, com formatos e frequências diferentes.</p></div></li>
+        <li><span class="i">03</span><div><h3>Demanda do projeto de extensão</h3><p>"Unidades de Conservação é Preciso" (UNIVALI) precisa de dados atualizados, padronizados e consumíveis.</p></div></li>
+      </ul>
+      <figure class="fig" style="flex:1">
+        <div class="imgbox"><img src="assets/img/figure-13.png" alt="Uso e cobertura da terra em Santa Catarina em 2025, MapBiomas Coleção 11"></div>
+        <figcaption><b>Figura 13</b> · MapBiomas Brasil, Coleção 11, recorte publicado na Gold</figcaption>
+      </figure>
+    </div>
+    <div class="callout"><p>Justificativa: deslocar o esforço dos pesquisadores da preparação para a análise dos dados.</p></div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     04 · PROBLEMA
+     ===================================================================== -->
+<section class="slide" data-title="Problema" data-section="Problema">
+  <div class="kicker">Problema</div>
+  <h1 class="s-title">A preparação manual impede uma análise recorrente</h1>
+  <div class="s-content">
+    <div class="statement">
+      <p>Dificuldade de produzir, de forma consistente e recorrente, informação geoespacial confiável para o monitoramento de Unidades de Conservação e de seus entornos em Santa Catarina.</p>
+      <p class="src">Seção 1.1 do relatório · Formulação do problema</p>
+    </div>
+    <div class="chips">
+      <span class="chip">Limites pontuais ou incompletos</span>
+      <span class="chip">Entornos sem ZA cartografada</span>
+      <span class="chip">Fontes heterogêneas</span>
+      <span class="chip">Etapas manuais</span>
+      <span class="chip">Baixa rastreabilidade</span>
+    </div>
+    <p class="note">Consequência: cada nova demanda reconstrói o trabalho, com retrabalho e baixa reprodutibilidade.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     05 · OBJETIVOS (leitura literal)
+     ===================================================================== -->
+<section class="slide" data-title="Objetivos" data-section="Problema">
+  <div class="kicker">Objetivos</div>
+  <h1 class="s-title">Preparar, integrar e disponibilizar dados analisáveis</h1>
+  <div class="s-content" style="gap:22px;margin-top:30px">
+    <div class="obj-general">
+      <div class="kicker">Objetivo geral</div>
+      <p>Desenvolver um pipeline automatizado para dados geoespaciais sobre Unidades de Conservação e seus entornos em Santa Catarina, com foco na preparação, integração e disponibilização de dados analisáveis para apoio às pesquisas nas áreas de interesse.</p>
+    </div>
+    <div class="kicker obj-kicker">Objetivos específicos</div>
+    <div class="obj-grid">
+      <article><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></svg><p><b>1.</b> Levantar os requisitos relacionados às fontes de dados necessárias ao monitoramento de Unidades de Conservação, Zonas de Amortecimento e Buffers de Abrangência em Santa Catarina;</p></article>
+      <article><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg><p><b>2.</b> Estruturar uma base geoespacial rastreável e reutilizável para os dados territoriais de interesse do projeto;</p></article>
+      <article><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg><p><b>3.</b> Automatizar a preparação de dados geoespaciais provenientes de múltiplas fontes heterogêneas cruzadas com as UCs e seus entornos;</p></article>
+      <article><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg><p><b>4.</b> Viabilizar a manutenção de informações espaciais estratégicas sobre essas áreas e seus entornos;</p></article>
+      <article><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg><p><b>5.</b> Desenvolver uma interface web para cadastro e atualização de geometrias vinculadas ao domínio analisado;</p></article>
+      <article><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16v5M16 14v7M20 10v11M8 18v3M4 20v1"/><path d="m22 3-8.65 8.65a.5.5 0 0 1-.7 0L9.35 8.35a.5.5 0 0 0-.7 0L2 15"/></svg><p><b>6.</b> Disponibilizar dados geoespaciais preparados para consumo analítico, elaboração de relatórios técnicos e análise de risco.</p></article>
+    </div>
+    <p class="source">Fonte: Diego Fonseca da Silva, TCC III, versão final, novembro de 2026.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     06 · PROCEDIMENTOS
+     ===================================================================== -->
+<section class="slide" data-title="Como o trabalho foi conduzido" data-section="Problema">
+  <div class="kicker">Procedimentos</div>
+  <h1 class="s-title">Do levantamento das fontes à validação na nuvem</h1>
+  <div class="s-content">
+    <div class="flow">
+      <div class="st"><span class="n">1</span><h3>Levantar</h3><p>6 bases comparadas, 4 fontes escolhidas</p></div>
+      <div class="st"><span class="n">2</span><h3>Especificar</h3><p>Regras de negócio, requisitos e modelo lógico</p></div>
+      <div class="st"><span class="n">3</span><h3>Implementar</h3><p>Airflow, PostGIS, FastAPI, React e AWS</p></div>
+      <div class="st"><span class="n">4</span><h3>Validar</h3><p>Testes, cenários ponta a ponta e inspeção do banco</p></div>
+    </div>
+    <div class="callout navy"><p>Critério de conclusão: API, Airflow e PostgreSQL/PostGIS devem apresentar estados coerentes entre si.</p></div>
+    <p class="note">As áreas do MapBiomas foram comparadas ao cálculo oficial do próprio MapBiomas no Google Earth Engine.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     07 · SOLUÇÃO (visão geral)
+     ===================================================================== -->
+<section class="slide" data-title="Visão geral do produto" data-section="Produto">
+  <div class="kicker">Produto desenvolvido</div>
+  <h1 class="s-title">Uma cadeia integrada de cadastro, processamento e publicação</h1>
+  <div class="s-content">
+    <div class="row grow">
+      <figure class="fig" style="flex:1.75">
+        <div class="imgbox"><img src="assets/img/figure-1.png" alt="Arquitetura geral do produto com camadas Bronze, Silver e Gold no S3, Apache Airflow e PostgreSQL/PostGIS"></div>
+        <figcaption><b>Figura 1</b> · Arquitetura geral do produto (Autor, 2026)</figcaption>
+      </figure>
+      <div class="cards c2" style="flex:1;align-content:stretch">
+        <div class="metric"><div class="num">186</div><div class="lbl">UCs cadastradas</div><div class="sub">federais, estaduais e municipais</div></div>
+        <div class="metric"><div class="num">4</div><div class="lbl">fontes temáticas</div><div class="sub">vetor, raster e ponto</div></div>
+        <div class="metric"><div class="num">12</div><div class="lbl">DAGs</div><div class="sub">no Apache Airflow</div></div>
+        <div class="metric"><div class="num">7</div><div class="lbl">cenários</div><div class="sub">cadastrais versionados</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     08 · DOMÍNIO TERRITORIAL
+     ===================================================================== -->
+<section class="slide" data-title="UC, ZA oficial e Buffer" data-section="Produto">
+  <div class="kicker">Domínio territorial</div>
+  <h1 class="s-title">ZA oficial e Buffer de Abrangência não são equivalentes</h1>
+  <div class="s-content">
+    <div class="cards c3">
+      <div class="card"><span class="idx">Entidade de referência</span><h3>Unidade de Conservação</h3><p>Identidade estável, geometria pontual ou poligonal e histórico de versões.</p></div>
+      <div class="card navy"><span class="idx">Delimitação oficial</span><h3>ZA oficial</h3><p>Entorno instituído. Tem precedência sempre que cadastrada.</p></div>
+      <div class="card"><span class="idx">Delimitação operacional</span><h3>Buffer de Abrangência</h3><p>3.000 m gerados quando não há ZA. Sem natureza jurídica.</p></div>
+    </div>
+    <div class="crs">
+      <span class="step">EPSG:4674</span><span class="arr">→</span>
+      <span class="step">EPSG:31982</span><span class="arr">→</span>
+      <span class="step hl">Buffer 3.000 m</span><span class="arr">→</span>
+      <span class="step">EPSG:4674</span>
+    </div>
+    <p class="note">Cada UC ativa tem um único entorno vigente. A troca encerra a vigência, sem apagar o histórico.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     09 · ORQUESTRAÇÃO POR MANIFESTO
+     ===================================================================== -->
+<section class="slide" data-title="Orquestração por manifesto" data-section="Produto">
+  <div class="kicker">Orquestração end-to-end</div>
+  <h1 class="s-title">A geometria confirmada precede os cruzamentos temáticos</h1>
+  <div class="s-content">
+    <div class="row grow">
+      <figure class="fig" style="flex:1.6">
+        <div class="imgbox"><img src="assets/img/figure-11.png" alt="Encadeamento das execuções dirigidas por manifesto, da API ao cadastro, ao entorno e às quatro DAGs temáticas"></div>
+        <figcaption><b>Figura 11</b> · Encadeamento das execuções dirigidas por manifesto (Autor, 2026)</figcaption>
+      </figure>
+      <div class="col" style="flex:1;justify-content:center">
+        <ul class="list">
+          <li><span class="b">1</span><p><strong>Agenda da fonte.</strong> PRODES anual, Alerta e FIRMS semanais</p></li>
+          <li><span class="b">2</span><p><strong>Evento cadastral.</strong> Manifesto imutável na Bronze dispara o recálculo</p></li>
+        </ul>
+        <div class="callout"><p>A importação só termina após os quatro temas sobre a nova geometria.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     10 · MANUTENÇÃO CADASTRAL
+     ===================================================================== -->
+<section class="slide" data-title="Manutenção cadastral versionada" data-section="Produto">
+  <div class="kicker">Manutenção cadastral</div>
+  <h1 class="s-title">Sete cenários preservam identidade e histórico</h1>
+  <div class="s-content">
+    <div class="row grow">
+      <figure class="fig" style="flex:1.05">
+        <div class="imgbox"><img src="assets/img/figure-14.png" alt="Ciclo de vida da UC e da área de entorno"></div>
+        <figcaption><b>Figura 14</b> · Ciclo de vida da UC e da área de entorno (Autor, 2026)</figcaption>
+      </figure>
+      <div class="col" style="flex:1">
+        <ul class="scen">
+          <li><code>UC-CW01</code><span>Cadastro poligonal e lote</span></li>
+          <li><code>UC-CW02</code><span>Cadastro pontual com Buffer</span></li>
+          <li><code>UC-CW03</code><span>UC e ZA oficial juntas</span></li>
+          <li><code>UC-CW04</code><span>Atualização versionada</span></li>
+          <li><code>UC-CW05</code><span>Extinção lógica</span></li>
+          <li><code>UC-CW06</code><span>Ponto substituído por polígono</span></li>
+          <li><code>UC-CW07</code><span>Buffer substituído por ZA</span></li>
+        </ul>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:auto">
+          <button class="pill-btn" data-zoom="assets/img/figure-15.png" data-caption="Figura 15 · Tela de cenários de cadastro da interface web (Autor, 2026)">Ver a interface web</button>
+          <button class="pill-btn" data-zoom="assets/img/figure-21.png" data-caption="Figura 21 · Importação cadastral com a máquina de processamento desligada (Autor, 2026)">Ver a sequência</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     11 · RESULTADOS DAS FONTES
+     ===================================================================== -->
+<section class="slide" data-title="Resultados das fontes temáticas" data-section="Resultados">
+  <div class="kicker">Resultados · Quatro fontes</div>
+  <h1 class="s-title">Cada fonte preserva o seu significado</h1>
+  <p class="s-lead">Leitura do banco na AWS em 01/11/2026, com as 186 UCs cadastradas.</p>
+  <div class="s-content" style="margin-top:26px">
+    <div class="cards c4 grow">
+      <div class="src-card"><span class="type">Vetorial</span><h3>PRODES</h3><div class="big">16.006</div><span class="unit">relações</span><p>13.213 polígonos de 15 mapeamentos, 2004 a 2023, em 182 UCs</p></div>
+      <div class="src-card"><span class="type">Vetorial</span><h3>MapBiomas Alerta</h3><div class="big">312</div><span class="unit">relações</span><p>267 alertas, 2019 a 2026, em 107 UCs</p></div>
+      <div class="src-card"><span class="type">Raster</span><h3>MapBiomas Uso</h3><div class="big">93.905</div><span class="unit">registros</span><p>41 anos, 1985 a 2025, por área, ano e classe</p></div>
+      <div class="src-card"><span class="type">Pontual</span><h3>FIRMS</h3><div class="big">1.759</div><span class="unit">relações</span><p>1.628 focos, 2000 a 2026, em 132 UCs</p></div>
+    </div>
+    <p class="note">Alerta não equivale a infração confirmada. Foco de calor não equivale a área queimada.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     12 · MAPBIOMAS
+     ===================================================================== -->
+<section class="slide" data-title="Verificação com o MapBiomas" data-section="Resultados">
+  <div class="kicker">Resultados · Verificação das áreas</div>
+  <h1 class="s-title">As áreas reproduzem o cálculo do próprio MapBiomas</h1>
+  <div class="s-content">
+    <div class="row grow">
+      <div class="row" style="flex:1.55;gap:20px">
+        <figure class="fig grow">
+          <div class="imgbox"><img src="assets/img/figure-12.png" alt="Uso e cobertura da terra em Santa Catarina em 1989, MapBiomas Coleção 11"></div>
+          <figcaption><b>Figura 12</b> · SC em 1989</figcaption>
+        </figure>
+        <figure class="fig grow">
+          <div class="imgbox"><img src="assets/img/figure-13.png" alt="Uso e cobertura da terra em Santa Catarina em 2025, MapBiomas Coleção 11"></div>
+          <figcaption><b>Figura 13</b> · SC em 2025</figcaption>
+        </figure>
+      </div>
+      <div class="col compact" style="flex:1">
+        <div class="metric amber"><div class="num">0,002%</div><div class="lbl">diferença total de área</div></div>
+        <div class="metric"><div class="num">97,0%</div><div class="lbl">das linhas com até 3 pixels de diferença</div></div>
+        <div class="metric"><div class="num">0,007 <small>p.p.</small></div><div class="lbl">discordância de composição</div></div>
+      </div>
+    </div>
+    <p class="note">139 UCs sem parte fora do estado nem sobreposição, nos 41 anos. Não avalia a acurácia temática do MapBiomas.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     13 · DISPONIBILIZAÇÃO
+     ===================================================================== -->
+<section class="slide" data-title="Disponibilização analítica" data-section="Resultados">
+  <div class="kicker">Resultados · Consumo analítico</div>
+  <h1 class="s-title">Um contrato somente leitura para análise externa</h1>
+  <div class="s-content">
+    <div class="row grow">
+      <figure class="fig" style="flex:1.25">
+        <div class="imgbox"><img src="assets/img/figure-18.png" alt="Camada de acesso analítico somente leitura, com o schema reporting e os consumidores externos"></div>
+        <figcaption><b>Figura 18</b> · Camada de acesso analítico somente leitura (Autor, 2026)</figcaption>
+      </figure>
+      <div class="col" style="flex:1">
+        <ul class="list">
+          <li><span class="b">9</span><p><strong>views</strong> no schema reporting</p></li>
+          <li><span class="b">48</span><p><strong>camadas no GeoServer</strong>: 7 vetoriais e 41 rasters</p></li>
+          <li><span class="b amber">3</span><p><strong>clientes validados</strong>: QGIS, DBeaver e Power BI</p></li>
+        </ul>
+        <button class="pill-btn" style="margin-top:auto;align-self:flex-start" data-zoom="assets/img/figure-19.png" data-caption="Figura 19 · Camadas vetoriais publicadas pelo serviço WMS na área do Parque Nacional das Araucárias (Autor, 2026)">Ver resposta WMS real</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     14 · AWS E VALIDAÇÃO
+     ===================================================================== -->
+<section class="slide" data-title="Implantação e validação na AWS" data-section="Resultados">
+  <div class="kicker">Resultados · Implantação pública</div>
+  <h1 class="s-title">Serviço contínuo e processamento ligado só quando necessário</h1>
+  <div class="s-content">
+    <div class="row grow">
+      <figure class="fig" style="flex:1.45">
+        <div class="imgbox"><img src="assets/img/figure-20.png" alt="Arquitetura implantada na AWS com CloudFront, duas instâncias EC2, RDS, S3, EventBridge e observabilidade"></div>
+        <figcaption><b>Figura 20</b> · Arquitetura implantada na AWS (Autor, 2026)</figcaption>
+      </figure>
+      <div class="col compact" style="flex:1">
+        <div class="metric"><div class="num">156</div><div class="lbl">testes da API aprovados</div></div>
+        <div class="metric"><div class="num">114</div><div class="lbl">testes do pipeline aprovados</div></div>
+        <div class="metric amber"><div class="num">71 <small>min</small></div><div class="lbl">da Bronze à publicação, uma UC nova</div></div>
+      </div>
+    </div>
+    <p class="note">A reconstrução a partir da Bronze reproduziu as contagens e o hash SHA-256 dos rasters COG.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     15 · CUSTO
+     ===================================================================== -->
+<section class="slide" data-title="Custo da operação" data-section="Resultados">
+  <div class="kicker">Resultados · Custo mensal</div>
+  <h1 class="s-title">Custo conhecido, da ordem de dezenas de dólares</h1>
+  <div class="s-content">
+    <div class="cards c3 big-metrics">
+      <div class="metric"><div class="lbl" style="margin:0 0 12px">Proposta (TCC I)</div><div class="num">≈ US$ 30</div><div class="sub">antes da implantação</div></div>
+      <div class="metric"><div class="lbl" style="margin:0 0 12px">Estimativa implantada</div><div class="num">US$ 53,70</div><div class="sub">≈ R$ 295,35 por mês</div></div>
+      <div class="metric amber"><div class="lbl" style="margin:0 0 12px">Uso observado, out/2026</div><div class="num">≈ US$ 51,20</div><div class="sub">US$ 1,61/dia + domínio</div></div>
+    </div>
+    <p class="note">Processamento ligado 27,7 h no mês, abaixo das 50 h previstas. Valor apurado em um único ciclo de faturamento.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     16 · OBJETIVOS ATENDIDOS
+     ===================================================================== -->
+<section class="slide" data-title="Atendimento aos objetivos" data-section="Conclusão">
+  <div class="kicker">Análise crítica · Quadro 35</div>
+  <h1 class="s-title">Os seis objetivos específicos apresentaram evidências de atendimento</h1>
+  <div class="s-content">
+    <div class="done">
+      <div class="card"><span class="tag">Atendido</span><h3>1. Requisitos</h3><p>Contratos e recortes das 4 fontes</p></div>
+      <div class="card"><span class="tag">Atendido</span><h3>2. Base rastreável</h3><p>PostGIS versionado e reconstrução pela Bronze</p></div>
+      <div class="card"><span class="tag">Atendido</span><h3>3. Automação</h3><p>Vetor, raster e ponto em 12 DAGs</p></div>
+      <div class="card"><span class="tag">Atendido</span><h3>4. Manutenção</h3><p>7 cenários com histórico e transações</p></div>
+      <div class="card"><span class="tag">Atendido</span><h3>5. Interface web</h3><p>Formulários, autenticação e acompanhamento</p></div>
+      <div class="card"><span class="tag">Atendido</span><h3>6. Consumo analítico</h3><p>Reporting, GeoServer e clientes externos</p></div>
+    </div>
+    <p class="note">Nas condições ensaiadas. Não equivale a validação ampla de usabilidade, segurança ou impacto.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     17 · LIMITAÇÕES E TRABALHOS FUTUROS
+     ===================================================================== -->
+<section class="slide" data-title="Limitações e trabalhos futuros" data-section="Conclusão">
+  <div class="kicker">Análise crítica · Seção 4.14</div>
+  <h1 class="s-title">As evidências delimitam o alcance das conclusões</h1>
+  <div class="s-content">
+    <div class="cmp">
+      <div class="cmp-col lim">
+        <h2>Limitações atuais</h2>
+        <ul class="points">
+          <li><span class="i">01</span><div><h3>Avaliação com a equipe</h3><p>Preliminar, com 6 participantes por videochamada e 3 no laboratório. A redução do retrabalho não foi medida.</p></div></li>
+          <li><span class="i">02</span><div><h3>Modelagem</h3><p>Relações do PRODES, Alerta e FIRMS com o interior da UC não guardam a versão geométrica.</p></div></li>
+          <li><span class="i">03</span><div><h3>Operação e segurança</h3><p>Ensaio com até 4 usuários simultâneos e sem teste de intrusão independente.</p></div></li>
+        </ul>
+      </div>
+      <div class="cmp-col fut">
+        <h2>Trabalhos futuros</h2>
+        <ul class="points">
+          <li><span class="i">01</span><div><h3>Ampliar a avaliação</h3><p>Medir o tempo e o esforço de preparação dos dados com a equipe do projeto.</p></div></li>
+          <li><span class="i">02</span><div><h3>Evoluir a modelagem</h3><p>Versão geométrica nas relações e restrições únicas no banco.</p></div></li>
+          <li><span class="i">03</span><div><h3>Fortalecer a operação</h3><p>Troca automática NRT por SP no FIRMS, alta disponibilidade e custo em novos ciclos.</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     18 · CONSIDERAÇÕES FINAIS
+     ===================================================================== -->
+<section class="slide" data-title="Considerações finais" data-section="Conclusão">
+  <div class="kicker">Considerações finais</div>
+  <h1 class="s-title">A preparação deixa de ser refeita a cada estudo</h1>
+  <div class="s-content" style="gap:22px;margin-top:26px">
+    <div class="statement"><p>Objetivo geral atendido nas condições de validação: 4 fontes integradas às 186 UCs e aos seus entornos, com cadastro versionado e acesso por ferramentas externas.</p></div>
+    <div class="cards c3">
+      <div class="card"><span class="idx">Decisão 1</span><h3>Manifesto imutável</h3><p>Entrada única que liga cada alteração aos derivados</p></div>
+      <div class="card"><span class="idx">Decisão 2</span><h3>Idempotência</h3><p>Em cada camada, da requisição às cargas</p></div>
+      <div class="card"><span class="idx">Decisão 3</span><h3>Armazenar ≠ processar</h3><p>Medallion no S3, processamento sob demanda</p></div>
+    </div>
+    <div class="row" style="align-items:center;gap:24px">
+      <a class="pill-btn" href="https://areasprotegidas-sc.com" target="_blank" rel="noopener">areasprotegidas-sc.com</a>
+      <p class="note">Código aberto (MIT), reprodutível a partir da camada Bronze.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     19 · AGRADECIMENTOS
+     ===================================================================== -->
+<section class="slide" data-bare data-title="Agradecimentos e perguntas" data-section="Conclusão">
+  <div class="thanks">
+    <h1>Obrigado</h1>
+    <p>À banca examinadora pela leitura atenta, ao orientador Rafael Ballottin Martins e à equipe do projeto Unidades de Conservação é Preciso.</p>
+    <div class="q">Fico à disposição para as perguntas</div>
+    <div class="links">
+      <a class="pill-btn" href="https://areasprotegidas-sc.com" target="_blank" rel="noopener">Produto publicado</a>
+      <a class="pill-btn" href="https://diegof-d2fs.github.io/pipeline-protected-areas-sc/" target="_blank" rel="noopener">Documentação</a>
+    </div>
+  </div>
+</section>
+
+  </div>
+</main>
+
+<!-- ============================== NAVEGAÇÃO ============================== -->
+<div class="nav-pill" id="navPill">
+  <button id="btnPrev" aria-label="Slide anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <span class="count" id="counter">01 / 19</span>
+  <button id="btnNext" aria-label="Próximo slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></button>
+</div>
+<div class="progress" id="progress"></div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Menu de slides">
+  <header><b>Slides</b><button class="ui-btn icon" id="btnCloseMenu" aria-label="Fechar menu">✕</button></header>
+  <nav id="drawerNav"></nav>
+  <div class="foot">Atalhos: tecla <kbd>?</kbd></div>
+</aside>
+
+<section class="overview" id="overview" aria-label="Visão geral"><div class="grid" id="overviewGrid"></div></section>
+
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Imagem em tela cheia">
+  <div class="lb-top">
+    <span class="lb-cap" id="lbCap"></span>
+    <button class="ui-btn" id="lbOut" aria-label="Diminuir zoom">−</button>
+    <button class="ui-btn" id="lbReset">Ajustar</button>
+    <button class="ui-btn" id="lbIn" aria-label="Aumentar zoom">+</button>
+    <a class="ui-btn" id="lbOpen" target="_blank" rel="noopener">Abrir original</a>
+    <button class="ui-btn lb-close" id="lbClose" aria-label="Fechar imagem (Esc)">✕</button>
+  </div>
+  <div class="lb-canvas" id="lbCanvas"><img id="lbImg" alt=""></div>
+  <div class="lb-hint">Roda do mouse ou + / − para zoom · arraste para mover · duplo clique alterna zoom · Esc ou ✕ para voltar</div>
+</div>
+
+<div class="help" id="help">
+  <div class="card">
+    <h3>Atalhos</h3>
+    <table>
+      <tr><td><kbd>→</kbd> <kbd>Espaço</kbd> <kbd>PgDn</kbd></td><td>Próximo slide</td></tr>
+      <tr><td><kbd>←</kbd> <kbd>PgUp</kbd></td><td>Slide anterior</td></tr>
+      <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>Primeiro / último slide principal</td></tr>
+      <tr><td><kbd>S</kbd></td><td>Ir ao sumário</td></tr>
+      <tr><td><kbd>M</kbd></td><td>Menu de slides</td></tr>
+      <tr><td><kbd>G</kbd></td><td>Visão geral</td></tr>
+      <tr><td><kbd>F</kbd></td><td>Tela cheia</td></tr>
+                        <tr><td><kbd>Esc</kbd></td><td>Fechar imagem, menu ou painel</td></tr>
+      <tr><td>Clique na figura</td><td>Abre em tela cheia com zoom</td></tr>
+    </table>
+    <p style="margin:14px 0 0;font-size:14px;color:var(--muted)">Digite um número e Enter para ir direto ao slide.</p>
+  </div>
+</div>
+
+<script src="assets/js/deck.js?v=20261123f"></script>
+</body>
+</html>
