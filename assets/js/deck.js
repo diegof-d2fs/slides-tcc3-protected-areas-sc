@@ -438,7 +438,15 @@
       "<h3 style=\"margin:0 0 10px;font-size:20px;color:var(--navy)\">" + (s.apx ? s.label : pad(s.label)) + " · " + s.title + "</h3>" +
       notes.map((p) => "<p>" + p + "</p>").join("") +
       '<p class="words">' + words + " palavras · cerca de " + fmt((words / 110) * 60) + " de fala" + (time ? " · tempo do slide " + fmt(time) : "") + "</p>" +
-      (s.apx ? '<p class="words">Slide de apoio: não aparece na tela do público.</p>' : "");
+      (s.apx ? '<p class="words">Slide de apoio: não aparece na tela do público.</p>' : "") +
+      // Cola para a arguição: só no apresentador e fora da contagem de palavras da fala.
+      (!s.apx && window.ROTEIRO_COLA && window.ROTEIRO_COLA[Number(s.label)]
+        ? '<div class="cola"><div class="cola-head">Cola para a arguição · não é fala</div>' +
+          window.ROTEIRO_COLA[Number(s.label)]
+            .map((b, i) => "<details" + (i === 0 ? " open" : "") + "><summary>" + b.q + "</summary>" + b.a + "</details>")
+            .join("") +
+          "</div>"
+        : "");
     const n = slides[cur + 1];
     const nextBox = $("#nextBox");
     if (nextBox) {

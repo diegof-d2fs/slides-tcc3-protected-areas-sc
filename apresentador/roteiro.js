@@ -142,8 +142,8 @@ window.ROTEIRO = [
   "time": 85,
   "notes": [
    "As limitações delimitam as conclusões. A avaliação com a equipe foi preliminar: seis participantes por videochamada e três no laboratório. Houve interesse, mas a redução do retrabalho ainda não foi medida.",
-   "Na modelagem, as relações do PRODES, Alerta e FIRMS com o interior da UC não guardam a versão geométrica. Isso só aparece quando a geometria de uma UC é substituída, o que não ocorreu nos dados apresentados. E os ensaios foram limitados a quatro usuários simultâneos, sem teste de intrusão.",
-   "Daí vêm os trabalhos futuros: medir o efeito com a equipe, registrar a versão geométrica nas relações, implementar a troca automática dos dados NRT pelo SP no FIRMS e avaliar alta disponibilidade do banco."
+   "Na modelagem, as relações do PRODES, Alerta e FIRMS com o interior da UC não guardam a versão geométrica. Isso só aparece quando a geometria de uma UC é substituída, o que não ocorreu nos dados apresentados. Na operação, o FIRMS recente ainda está em tempo quase real, o NRT, o banco roda em uma única zona e o custo foi apurado em um só ciclo de faturamento.",
+   "Daí vêm os trabalhos futuros: medir o efeito com a equipe, registrar a versão geométrica nas relações, implementar a troca automática dos dados NRT pelo SP no FIRMS, avaliar alta disponibilidade do banco e acompanhar o custo em novos ciclos."
   ]
  },
  {
