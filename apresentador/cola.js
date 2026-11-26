@@ -7,7 +7,7 @@ window.ROTEIRO_COLA = {
 <li><b>“Linha”</b> = uma combinação <b>ano × UC × classe</b> (ex.: Formação Florestal na UC X em 2003). Na comparação direta foram <b>18.122 linhas</b>, de <b>139 UCs</b> nos <b>41 anos</b>.</li>
 <li><b>“Até três pixels de diferença”</b>: em <b>97,0%</b> dessas linhas, o número de pixels somado pelo pipeline e pelo GEE difere em no máximo 3. Em <b>76,3%</b> é exatamente o mesmo conjunto de pixels; com até 1 pixel, <b>91,7%</b>. Pior linha: <b>34 pixels</b>.</li>
 <li>Escala: em SC um pixel tem de <b>0,078 a 0,081 ha</b>, ou seja, 3 pixels ≈ <b>0,24 ha</b>. No maior caso (RPPN Emílio Einsfeld Filho, 6.331,95 ha), 39 pixels = 3,09 ha = <b>0,05%</b> da UC.</li>
-<li><b>“Discordância de composição de 0,007 ponto percentual”</b>: mede se a <b>proporção de cada classe dentro da UC</b> muda entre os dois cálculos. É uma média por UC e ano, ponderada pela área do GEE (Quadro 22). 0,007 p.p. significa que a composição da UC praticamente não muda.</li>
+<li><b>“Discordância de composição de 0,007 ponto percentual”</b>: mede se a <b>proporção de cada classe dentro da UC</b> muda entre os dois cálculos. Conta, para cada UC e ano: calculo a participação (%) de cada classe na área da UC no pipeline e no GEE, somo as diferenças absolutas entre as duas e divido por 2. Depois tiro a média de todas as UCs e anos, ponderada pela área do GEE.<br><code>D = ½ · Σ<sub>classes</sub> | %pipeline − %GEE |</code><br>O “½” evita contar a mesma área duas vezes: o que uma classe ganha, outra perde. D = 0 é composição idêntica, e D = 100 é composição totalmente diferente. Na comparação direta, D = 0,007 p.p.: <b>a composição das UCs não muda</b>.</li>
 <li><b>“Restrita a pixels de borda”</b>: a diferença de cada UC é <b>a mesma nos 41 anos</b> (varia menos de 10⁻⁴ pixel). Se o problema fosse de classe, ela mudaria de um ano para outro, porque as classes mudam. Logo, a diferença está em <b>quais pixels entram no recorte</b>, e não na classe. UCs que coincidem 100% têm mediana de 10,4 ha; as que diferem têm mediana de 201,2 ha (mais perímetro, mais borda).</li>
 </ul>` },
   { q: "Como o pipeline calcula a área (DAG_MAPBIOMAS)",
@@ -58,6 +58,12 @@ window.ROTEIRO_COLA = {
 <li><b>Sobreposição</b> (24 UCs): <b>+0,66%</b>, efeito do <code>paint</code>. Ex.: PE Serra Furada, 1.330,36 ha, dos quais 1.151,53 ha sobrepostos ao PARNA São Joaquim; o GEE dá 178,38 ha.</li>
 <li><b>Ambos</b> (7 UCs): −13,2%. Todas as comparáveis: −4,6%.</li>
 <li><b>Não avalia a acurácia temática</b> do MapBiomas: compara o cálculo de área, não se a classificação do pixel está certa.</li>
+</ul>` },
+  { q: "Os números foram conferidos de novo (se perguntarem)",
+    a: `<p>Em 25/11/2026 a comparação foi <b>refeita do zero</b>: CSV exportado do GEE (28.998 linhas), áreas do banco de produção (29.952 linhas) e o arquivo de UCs enviado ao GEE, que é o mesmo da carga de 01/11 guardado na Bronze, para ligar o <code>uc_id</code> ao CNUC.</p>
+<ul>
+<li>Grupos pelas medidas do cadastro: “parte fora de SC” quando a área geodésica do polígono passa a da área de interesse em mais de 0,01 ha; “sobreposição” quando a interseção com outra UC passa de 10 m².</li>
+<li>Resultado igual ao Quadro 22 em todos os grupos. Comparação direta: 139 UCs, 18.122 linhas, 76,3% com o mesmo conjunto de pixels, 91,7% até 1 pixel, 97,0% até 3, pior linha 34 pixels, diferença total de 0,002%, discrepância bruta de 0,020% a 0,024% e composição de 0,007 p.p. Todas as UCs: −4,555% e 3,980 p.p.</li>
 </ul>` },
   { q: "Fala direta: qual a diferença de metodologia entre os dois",
     a: `<p>“Os dois calculam a área do mesmo jeito: somam a <b>área real de cada pixel</b>, sobre o <b>mesmo mapa</b> da Coleção 11, na <b>mesma grade</b>, sem reamostrar. Eu calculo a área do pixel no elipsoide WGS 84, linha a linha do raster; o GEE usa o <code>pixelArea</code>. Onde os pixels são os mesmos, as áreas batem: a maior diferença relativa foi de 1,5 × 10⁻⁵.</p>
