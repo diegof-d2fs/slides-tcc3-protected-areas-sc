@@ -68,9 +68,22 @@ window.ROTEIRO_COLA = {
 <p>O segundo e o terceiro são decisões de modelagem, conhecidas antes. Por isso a comparação direta usa só as 139 UCs sem nenhum dos dois casos.”</p>` }
  ],
  13: [
-  { q: "Frase-chave (diga assim)",
-    a: `<p><b>“O usuário não lê as tabelas operacionais do banco. Ele lê nove views de um schema separado, o <code>reporting</code>, com login próprio, somente leitura e com limites de tempo e de conexões.”</b></p>
-<p class="alerta"><b>Cuidado:</b> não diga que é “outro banco”. É a <b>mesma instância RDS</b>; o isolamento é <b>lógico</b> (schema, papéis e permissões), não uma réplica.</p>` },
+  { q: "Fala para convencer a banca (abra com isto)",
+    a: `<p>“Ninguém de fora fica pendurado no banco de produção. Há três barreiras.</p>
+<p><b>Primeira:</b> quem usa mapa, no QGIS ou no navegador, <b>nunca conecta no banco</b>. Ele fala com o GeoServer por HTTPS, e só o GeoServer conecta, com no máximo 10 conexões. O raster do MapBiomas nem passa pelo banco: sai de arquivo.</p>
+<p><b>Segunda:</b> quem conecta direto, como Power BI e DBeaver, só enxerga <b>nove views</b> num schema separado, com login somente leitura, consulta cortada em 2 a 4 minutos, sessão parada derrubada em 5 minutos e número máximo de conexões por login.</p>
+<p><b>Terceira:</b> como cada consumidor tem teto de conexões, <b>sempre sobra conexão</b> para a API e para o Airflow gravarem. E, como todos são somente leitura, nenhuma consulta externa trava uma carga.”</p>
+<p class="alerta">Se perguntarem: é a <b>mesma instância RDS</b>, com isolamento <b>lógico</b> (schema, papéis, limites), e não uma réplica. Não diga “outro banco”.</p>` },
+  { q: "Como 100 pessoas no QGIS viram no máximo 10 conexões no banco",
+    a: `<ol>
+<li>O QGIS <b>não fala PostgreSQL</b> com a gente. Ele pede um mapa ou feições por <b>HTTPS</b> (WMS, WMTS, WFS, WCS) ao GeoServer, passando pelo CloudFront e pelo nginx.</li>
+<li>O GeoServer mantém um <b>pool de conexões</b> com o banco: de 1 a no máximo 10 conexões abertas com o login <code>geoserver_svc</code>. É como um balcão com 10 atendentes.</li>
+<li>Cada pedido <b>pega uma conexão emprestada</b> só pelo tempo da consulta (normalmente uma fração de segundo), lê a view e <b>devolve</b>. A conexão não fica presa à pessoa: ela atende o próximo pedido, de outra pessoa.</li>
+<li>Se chegam mais pedidos que 10 ao mesmo tempo, os excedentes <b>esperam na fila dentro do GeoServer</b>, e não no banco. O banco continua vendo no máximo 10 conexões.</li>
+<li>Boa parte dos pedidos <b>nem chega ao pool</b>: blocos do WMTS que já estão no cache saem do GeoWebCache, e o raster do MapBiomas (WMS e WCS) sai do arquivo COG em disco.</li>
+<li>Rede de segurança no próprio banco: o login <code>geoserver_svc</code> tem <code>CONNECTION LIMIT 20</code> e consulta máxima de 120 s. Mesmo que o GeoServer fosse mal configurado, o banco recusaria além disso.</li>
+</ol>
+<p><b>Fala:</b> “As cem pessoas conversam com o GeoServer, não com o banco. O GeoServer tem dez conexões e as reaproveita: cada pedido usa uma por instantes e devolve. Quem chega com as dez ocupadas espera na fila do GeoServer. E tudo o que está em cache ou em arquivo nem chega a elas.”</p>` },
   { q: "Como o isolamento é montado",
     a: `<ol>
 <li><b>Tabelas operacionais</b> (<code>public</code>): só a API e o Airflow escrevem. Ninguém de fora tem permissão nelas.</li>
@@ -91,40 +104,56 @@ window.ROTEIRO_COLA = {
 <li><code>idle_in_transaction_session_timeout</code> (300 s): derruba quem abriu uma transação e deixou o DBeaver ou o Power BI parado.</li>
 <li><code>CONNECTION LIMIT</code>: um consumidor não esgota as conexões que a API e o Airflow precisam.</li>
 <li>Somente leitura: nenhuma consulta externa segura bloqueio de escrita das cargas.</li>
-</ul>` },
+</ul>
+<p><b>Falas, uma por regra:</b></p>
+<p><b>Conexões máximas:</b> “Cada login tem um teto de conexões abertas ao mesmo tempo. O laboratório inteiro, por exemplo, não passa de 12. Assim nenhum grupo de usuários ocupa as conexões de que a API e o Airflow precisam para gravar.”</p>
+<p><b>Consulta máxima:</b> “Toda consulta externa tem tempo máximo: 2 minutos para Power BI, GeoServer e oficina, e 3 minutos e 40 segundos para o laboratório. Passou disso, o próprio PostgreSQL cancela a consulta. Uma consulta pesada esquecida rodando não consome o banco indefinidamente.”</p>
+<p><b>Transação ociosa:</b> “Se alguém abre uma transação no DBeaver ou no Power BI e sai para o café, depois de 5 minutos parado o banco encerra essa sessão sozinho. É o caso clássico de usuário pendurado, e ele é derrubado automaticamente.”</p>
+<p><b>Somente leitura:</b> “Todos esses logins entram em modo somente leitura. Leitura não bloqueia escrita no PostgreSQL, então uma consulta externa, por maior que seja, não trava a carga semanal nem um cadastro.”</p>
+<p><b>Validade:</b> “O login de oficina já nasce com data de expiração. Quando o modo eventos termina, ele é apagado. Não fica acesso esquecido.”</p>` },
   { q: "De onde vêm WMS, WMTS, WFS e WCS",
-    a: `<p>Caminho: usuário → <b>CloudFront</b> (HTTPS) → nginx no <b>nó de serviço</b> → <b>GeoServer</b>. <b>Quem usa mapa nunca conecta no banco</b>; só o GeoServer conecta, com o login <code>geoserver_svc</code> e um <b>pool de no máximo 10 conexões</b>. Com 100 pessoas no QGIS, o banco continua vendo no máximo 10.</p>
+    a: `<p>Caminho: usuário → <b>CloudFront</b> (HTTPS) → nginx no <b>nó de serviço</b> → <b>GeoServer</b> → banco (só vetores) ou arquivo (raster).</p>
 <table>
-<tr><th>Serviço</th><th>Entrega</th><th>Origem do dado</th></tr>
-<tr><td>WMS</td><td>imagem do mapa, já colorida</td><td>vetores: views pelo pool · raster: COG em disco</td></tr>
-<tr><td>WMTS</td><td>blocos de imagem em cache</td><td>GeoWebCache: bloco em cache não vai ao banco; no modo eventos pré-gera SC (zoom 5 a 11)</td></tr>
-<tr><td>WFS</td><td>feições com atributos (GeoJSON, CSV)</td><td>views pelo pool, páginas de 1.000 feições</td></tr>
-<tr><td>WCS</td><td>raster MapBiomas (código da classe)</td><td>COG em disco, <b>sem banco</b></td></tr>
-</table>
-<p><b>COG</b> = GeoTIFF da camada Gold, copiado do S3 para o disco do nó de serviço, com hash conferido contra o catálogo. A cada carga, a <code>DAG_GEOSERVER_SYNC</code> republica as camadas e limpa os caches.</p>` },
+<tr><th>Serviço</th><th>Entrega</th><th>Origem do dado</th><th>Toca o banco?</th></tr>
+<tr><td>WMS</td><td>imagem do mapa, já colorida</td><td>vetores: views pelo pool · raster: COG em disco</td><td>só nos vetores</td></tr>
+<tr><td>WMTS</td><td>blocos de imagem em cache</td><td>GeoWebCache; no modo eventos pré-gera SC (zoom 5 a 11)</td><td>só quando o bloco não está no cache</td></tr>
+<tr><td>WFS</td><td>feições com atributos (GeoJSON, CSV)</td><td>views pelo pool, páginas de 1.000 feições</td><td>sim, pelo pool de 10</td></tr>
+<tr><td>WCS</td><td>raster MapBiomas (código da classe)</td><td>COG em disco</td><td><b>não</b></td></tr>
+</table>` },
+  { q: "Para que serve a parte do S3 e do COG",
+    a: `<ul>
+<li><b>O problema:</b> o MapBiomas tem 41 rasters anuais de Santa Catarina. Servir cada mapa lendo raster de dentro do banco faria cada usuário pesar no PostgreSQL.</li>
+<li><b>COG</b> (<i>Cloud Optimized GeoTIFF</i>) é um GeoTIFF organizado em blocos internos e com versões reduzidas da imagem (overviews). Para um pedido de mapa ou de recorte, o GeoServer lê <b>só o pedaço e o nível de zoom necessários</b>, e não o arquivo inteiro.</li>
+<li><b>S3 é a fonte da verdade</b>: o COG final fica na camada Gold do S3. O nó de serviço mantém uma <b>cópia local no disco</b>, e o GeoServer lê dela. Assim, <b>mapa e download do MapBiomas não passam pelo banco</b>.</li>
+<li><b>Hash conferido</b>: antes de publicar, o SHA-256 do arquivo em disco é comparado com o registrado no catálogo de rasters do banco. Garante que o mapa servido é exatamente o raster processado, e não uma cópia corrompida ou antiga.</li>
+<li><b>DAG_GEOSERVER_SYNC</b>: roda depois de cada carga. Republica as camadas e <b>limpa os caches</b>, para ninguém ver bloco velho; registra anos novos e baixa o COG novo só quando ele mudou.</li>
+</ul>
+<p><b>Fala:</b> “O raster do MapBiomas não sai do banco: sai de um arquivo otimizado em disco, cópia conferida por hash do que está no S3. Por isso o mapa e o download mais pesados do produto não geram conexão nenhuma no banco de produção.”</p>` },
   { q: "Risco que fica (se perguntarem)",
     a: `<p>O banco aceita conexão direta pela internet, por decisão das oficinas (redes desconhecidas, sem VPN nem lista de IPs). Mitigações: TLS obrigatório (<code>rds.force_ssl</code>), um login por consumidor, menor privilégio, limites de tempo e conexão e registro de conexões. Trabalho futuro: abrir o banco só durante as oficinas.</p>` }
  ],
  14: [
   { q: "Serviços da AWS: o que é e para que serve no projeto",
     a: `<table>
-<tr><th>Serviço</th><th>O que é</th><th>No projeto</th></tr>
-<tr><td><b>EC2</b></td><td>máquinas virtuais</td><td><b>Nó de serviço</b> t3a.small (2 GiB), 24/7: API, GeoServer e nginx em Docker Compose. <b>Nó de processamento</b> t3a.large (8 GiB, disco de 100 GB): Airflow e DAGs, só liga quando precisa e desliga após 20 min ocioso.</td></tr>
-<tr><td><b>EBS</b></td><td>discos das EC2</td><td>gp3: 20 GB no serviço e 100 GB criptografado no processamento (cache da Medallion).</td></tr>
-<tr><td><b>Elastic IP</b></td><td>IPv4 público fixo</td><td>Endereço fixo do nó de serviço, origem do CloudFront.</td></tr>
-<tr><td><b>RDS</b></td><td>banco gerenciado (backup, patches)</td><td>PostgreSQL 17 + PostGIS 3.5, db.t3.micro, 20 GB, Single-AZ, backup de 7 dias, TLS obrigatório.</td></tr>
-<tr><td><b>S3</b></td><td>armazenamento de objetos</td><td><b>Fonte da verdade</b> da Medallion. Bronze versionada e imutável; Silver, Gold e qualidade em outro bucket, criptografado; um terceiro bucket guarda o site do front.</td></tr>
-<tr><td><b>CloudFront</b></td><td>CDN (rede de entrega)</td><td>Domínio único em HTTPS: entrega o front do S3 e repassa <code>/api/*</code> e <code>/geoserver/*</code> ao nó de serviço. Põe HSTS, CSP e X-Frame-Options. Só ele alcança a porta 80 da máquina.</td></tr>
-<tr><td><b>Route 53</b></td><td>DNS e registro de domínio</td><td><code>areasprotegidas-sc.com</code> apontando para o CloudFront.</td></tr>
-<tr><td><b>ACM</b></td><td>certificados TLS gratuitos</td><td>Certificado do domínio, validado por DNS.</td></tr>
-<tr><td><b>VPC</b> e security groups</td><td>rede privada e firewall</td><td>2 zonas, sub-redes públicas, <b>sem NAT Gateway</b> (economia); endpoint de gateway do S3 (tráfego sem custo); regras explícitas por máquina.</td></tr>
-<tr><td><b>IAM</b> e OIDC</td><td>identidades e permissões</td><td>Um papel por máquina e por repositório. O GitHub Actions assume papel por <b>OIDC</b>, sem chave fixa guardada.</td></tr>
-<tr><td><b>ECR</b></td><td>registro de imagens Docker</td><td>Imagens da API e do pipeline, com a tag do commit; guarda as 5 mais recentes.</td></tr>
-<tr><td><b>Systems Manager (SSM)</b></td><td>administração das máquinas</td><td><b>Parameter Store</b>: senhas criptografadas. <b>Run Command</b>: deploy da API e sincronização do GeoServer. <b>Session Manager</b>: acesso sem SSH aberto. <b>Automation</b>: modo eventos (para, troca o tamanho e religa).</td></tr>
-<tr><td><b>EventBridge</b> (Scheduler e regras)</td><td>agendador e eventos</td><td>Liga o processamento nas janelas (segunda 06:00 UTC e 3 de janeiro); agenda o retorno do modo eventos como garantia; avisa por e-mail mudanças das automações.</td></tr>
-<tr><td><b>CloudWatch</b></td><td>logs, métricas e alarmes</td><td>Logs de cada contêiner e de cada tarefa do Airflow (14 dias, legíveis com a máquina desligada); alarmes de erro 5xx e de falhas de login.</td></tr>
-<tr><td><b>SNS</b></td><td>notificações</td><td>E-mail de falha de tarefa do Airflow, alarmes e modo eventos.</td></tr>
-<tr><td><b>Budgets</b></td><td>alerta de gasto</td><td>Aviso em 80% e 100% de US$ 65 por mês.</td></tr>
+<tr><th>Serviço</th><th>Significado do nome</th><th>O que é</th><th>No projeto</th></tr>
+<tr><td><b>AWS</b></td><td>Amazon Web Services</td><td>a nuvem da Amazon</td><td>Onde tudo roda, na região us-east-1 (Norte da Virgínia).</td></tr>
+<tr><td><b>EC2</b></td><td>Elastic Compute Cloud</td><td>máquinas virtuais</td><td><b>Nó de serviço</b> t3a.small (2 GiB), 24/7: API, GeoServer e nginx em Docker Compose. <b>Nó de processamento</b> t3a.large (8 GiB, disco de 100 GB): Airflow e DAGs, só liga quando precisa e desliga após 20 min ocioso.</td></tr>
+<tr><td><b>EBS</b></td><td>Elastic Block Store</td><td>discos das EC2</td><td>gp3: 20 GB no serviço e 100 GB criptografado no processamento (cache da Medallion).</td></tr>
+<tr><td><b>EIP</b></td><td>Elastic IP address</td><td>IPv4 público fixo</td><td>Endereço fixo do nó de serviço, origem do CloudFront.</td></tr>
+<tr><td><b>RDS</b></td><td>Relational Database Service</td><td>banco gerenciado (backup, patches)</td><td>PostgreSQL 17 + PostGIS 3.5, db.t3.micro, 20 GB, Single-AZ, backup de 7 dias, TLS obrigatório.</td></tr>
+<tr><td><b>S3</b></td><td>Simple Storage Service</td><td>armazenamento de objetos</td><td><b>Fonte da verdade</b> da Medallion. Bronze versionada e imutável; Silver, Gold e qualidade em outro bucket, criptografado; um terceiro bucket guarda o site do front.</td></tr>
+<tr><td><b>CloudFront</b></td><td>nome comercial; é uma CDN (<i>Content Delivery Network</i>)</td><td>rede de entrega de conteúdo</td><td>Domínio único em HTTPS: entrega o front do S3 e repassa <code>/api/*</code> e <code>/geoserver/*</code> ao nó de serviço. Põe HSTS, CSP e X-Frame-Options. Só ele alcança a porta 80 da máquina.</td></tr>
+<tr><td><b>Route 53</b></td><td>nome comercial; 53 é a porta padrão do DNS (<i>Domain Name System</i>)</td><td>DNS e registro de domínio</td><td><code>areasprotegidas-sc.com</code> apontando para o CloudFront.</td></tr>
+<tr><td><b>ACM</b></td><td>AWS Certificate Manager</td><td>certificados TLS (<i>Transport Layer Security</i>) gratuitos</td><td>Certificado do domínio, validado por DNS.</td></tr>
+<tr><td><b>VPC</b></td><td>Virtual Private Cloud</td><td>rede privada na nuvem, com security groups (firewall)</td><td>2 zonas, sub-redes públicas, <b>sem NAT Gateway</b> (economia); endpoint de gateway do S3 (tráfego sem custo); regras explícitas por máquina.</td></tr>
+<tr><td><b>IAM</b></td><td>Identity and Access Management</td><td>identidades e permissões</td><td>Um papel por máquina e por repositório, cada um com só o que precisa.</td></tr>
+<tr><td><b>OIDC</b></td><td>OpenID Connect</td><td>login federado entre sistemas</td><td>O GitHub Actions assume um papel da AWS por OIDC, sem chave de acesso fixa guardada.</td></tr>
+<tr><td><b>ECR</b></td><td>Elastic Container Registry</td><td>registro de imagens Docker</td><td>Imagens da API e do pipeline, com a tag do commit; guarda as 5 mais recentes.</td></tr>
+<tr><td><b>SSM</b></td><td>Systems Manager (a sigla vem do nome antigo, <i>Simple Systems Manager</i>)</td><td>administração das máquinas</td><td><b>Parameter Store</b>: senhas criptografadas. <b>Run Command</b>: deploy da API e sincronização do GeoServer. <b>Session Manager</b>: acesso sem SSH aberto. <b>Automation</b>: modo eventos (para, troca o tamanho e religa).</td></tr>
+<tr><td><b>EventBridge</b></td><td>nome comercial (Scheduler e regras de eventos)</td><td>agendador e barramento de eventos</td><td>Liga o processamento nas janelas (segunda 06:00 UTC e 3 de janeiro); agenda o retorno do modo eventos como garantia; avisa por e-mail mudanças das automações.</td></tr>
+<tr><td><b>CloudWatch</b></td><td>nome comercial</td><td>logs, métricas e alarmes</td><td>Logs de cada contêiner e de cada tarefa do Airflow (14 dias, legíveis com a máquina desligada); alarmes de erro 5xx e de falhas de login.</td></tr>
+<tr><td><b>SNS</b></td><td>Simple Notification Service</td><td>notificações</td><td>E-mail de falha de tarefa do Airflow, alarmes e modo eventos.</td></tr>
+<tr><td><b>Budgets</b></td><td>nome comercial (AWS Budgets)</td><td>alerta de gasto</td><td>Aviso em 80% e 100% de US$ 65 por mês.</td></tr>
 </table>
 <p>Tudo descrito em <b>Terraform</b> (repositório <code>infra-protected-areas-sc</code>), revisado como plano antes de aplicar. Região <b>us-east-1</b>.</p>` },
   { q: "Por que duas máquinas e não uma?",
