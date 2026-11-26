@@ -27,6 +27,16 @@ window.ROTEIRO_COLA = {
 <li>Redutor <code>ee.Reducer.sum().group(classe).group(território)</code> com <code>reduceRegion</code>, <b>escala 30 m</b>, <code>maxPixels 1e12</code>, região = extensão do mapa.</li>
 <li>O original usa um <b>raster de territórios</b> (biomas e estados). <b>4 adaptações</b> (TCC 3.3.3.1): asset da Coleção 11 v3, anos 1985–2025, território = UCs rasterizadas com <code>ee.Image.paint</code> pelo <code>uc_id</code> numérico, coluna da classe renomeada. Escala, unidade, redutor, máscara e região ficaram como no original.</li>
 </ul>` },
+  { q: "De onde vêm as áreas do GEE usadas na comparação",
+    a: `<ol>
+<li>Peguei o script oficial e fiz as 4 adaptações (Coleção 11, anos 1985–2025, UCs como território, nome da coluna).</li>
+<li>Enviei ao GEE a <b>coleção vetorial das UCs</b> cadastradas. O script a rasteriza com <code>ee.Image.paint</code>, usando o <code>uc_id</code> como número de cada território.</li>
+<li><b>Rodei o script no próprio GEE</b>. Ele calcula a área por UC, classe e ano no mapa oficial e exporta uma <b>tabela</b> (<code>Export.table.toDrive</code>, CSV) com uma linha por território, classe e ano: <b>28.998 linhas</b>.</li>
+<li>Do lado do pipeline, li as <b>29.952 linhas</b> de área por classe do interior das UCs gravadas no banco.</li>
+<li>Juntei as duas pelo <b>código CNUC</b> (o <code>uc_id</code> do arquivo enviado ao GEE diferia em 6 UCs), converti km² para hectare e tratei classe ausente no GEE como zero, porque o GEE só exporta área positiva. Resultado: 29.143 linhas comparáveis.</li>
+<li>Para achar a causa das diferenças, exportei também do GEE o <b>raster dos territórios</b> gerado pelo <code>paint</code> e comparei <b>pixel a pixel</b> com a seleção do pipeline. A diferença estava na regra de seleção do pixel de borda e no traçado das arestas.</li>
+</ol>
+<p>Ou seja: as áreas do GEE não vêm de nenhuma tabela pronta do MapBiomas. São o resultado do <b>script oficial executado por mim</b>, sobre o mesmo mapa e as mesmas UCs.</p>` },
   { q: "Critério a critério: pipeline × GEE",
     a: `<table>
 <tr><th>Critério</th><th>Pipeline</th><th>GEE (referência)</th></tr>
@@ -116,8 +126,9 @@ window.ROTEIRO_COLA = {
  15: [
   { q: "Como a estimativa foi feita",
     a: `<ul>
-<li><b>Proposta (TCC II), ≈ US$ 30/mês</b>: RDS db.t3.micro ≈ 15,00 + 20 GB ≈ 2,00 a 3,00 + EC2 t3.medium 150 h ≈ 10,00 + disco de 30 GB ≈ 2,40 + S3 20 GB ≈ 0,81.</li>
-<li><b>Implantação, US$ 53,70/mês</b>: preços <b>sob demanda</b> de us-east-1 obtidos na <b>AWS Price List API</b> em 30/09/2026, câmbio de R$ 5,50, domínio rateado por mês, <b>sem tributos</b>.</li>
+<li><b>Proposta (TCC II), ≈ US$ 30/mês</b>, feita na <b>AWS Pricing Calculator</b>, antes de existir qualquer fatura. Na calculadora informei cada componente com a configuração e as horas previstas, e ela aplicou o preço sob demanda de us-east-1: RDS db.t3.micro ≈ 15,00 + 20 GB ≈ 2,00 a 3,00 + EC2 t3.medium 150 h ≈ 10,00 + disco de 30 GB ≈ 2,40 + S3 20 GB ≈ 0,81. <i>(A menção à calculadora não ficou no PDF final.)</i></li>
+<li><b>Implantação, US$ 53,70/mês</b>: com a infraestrutura definida, recalculei com os preços <b>sob demanda</b> de us-east-1 da <b>AWS Price List API</b> (a mesma tabela de preços que a calculadora usa), em 30/09/2026, câmbio de R$ 5,50, domínio rateado por mês, <b>sem tributos</b>. É o que o Quadro 28 do PDF registra.</li>
+<li><b>Real</b>: depois veio a fatura de outubro (bloco abaixo). Ordem: calculadora (previsão) → Price List API (configuração implantada) → fatura (medido).</li>
 </ul>
 <table>
 <tr><th>Item</th><th>US$/mês</th></tr>
