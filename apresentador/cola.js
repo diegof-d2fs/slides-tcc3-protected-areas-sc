@@ -224,6 +224,29 @@ window.ROTEIRO_COLA = {
     a: `<p>No PRODES e no MapBiomas Alerta a proteção contra duplicidade está <b>no código</b>, e não em restrição única no banco, como já acontece no FIRMS. Por isso vale desde que as execuções dirigidas não rodem ao mesmo tempo (a DAG do Alerta aceita uma execução ativa por vez). Converter isso em restrições únicas é trabalho futuro.</p>` }
  ],
  17: [
+  { q: "Limitação 02 (Modelagem) explicada",
+    a: `<p><b>O contexto:</b> a geometria de uma UC tem <b>versões</b>. Quando o limite muda (atualização, UC-CW04, ou troca de ponto por polígono, UC-CW06), a versão antiga é encerrada, a nova passa a valer, e o pipeline <b>recalcula os cruzamentos</b> com os temas.</p>
+<p><b>Onde a versão é guardada e onde não é:</b></p>
+<ul>
+<li><b>MapBiomas Uso e Cobertura:</b> cada área por classe guarda a <b>versão</b> e o hash da geometria usada no cálculo. Dá para saber sobre qual limite ela foi calculada. Sem problema.</li>
+<li><b>ZA oficial e Buffer de Abrangência:</b> cada versão do entorno tem identificador próprio. Sem problema.</li>
+<li><b>PRODES, MapBiomas Alerta e FIRMS no interior da UC:</b> a relação guarda só <b>ocorrência + UC + tipo de cruzamento</b>, sem a versão da geometria. É aqui que está a limitação.</li>
+</ul>
+<p><b>O que acontece quando o limite de uma UC já cadastrada muda:</b></p>
+<ul>
+<li>O recálculo <b>acrescenta</b> as ocorrências que passam a ficar dentro do novo limite. Isso funciona.</li>
+<li>Mas as relações calculadas com o limite <b>antigo continuam lá</b>. Uma ocorrência que ficou de fora do novo limite segue aparecendo como “dentro da UC”.</li>
+<li>E uma ocorrência que já estava relacionada mantém a <b>área de interseção antiga</b>: como a chave (ocorrência + UC + tipo) já existe, a proteção contra duplicidade não grava de novo e a área não é recalculada.</li>
+</ul>
+<p><b>Exemplo:</b> um polígono de desmatamento estava 2 ha dentro do limite antigo. A UC é redesenhada e ele fica totalmente de fora. A relação de 2 ha continua no banco, como se ainda estivesse dentro.</p>
+<p><b>Por que não afeta os resultados apresentados:</b></p>
+<ul>
+<li>Só aparece quando a geometria de uma UC <b>já cadastrada</b> é substituída.</li>
+<li>Na leitura de 02/11/2026, <b>nenhuma UC</b> tinha geometria substituída. Os números do TCC não são afetados.</li>
+<li>UCs novas, ZAs e Buffers não são afetados.</li>
+</ul>
+<p><b>Como seria a correção</b> (trabalho futuro, sem mudar a arquitetura): incluir a versão da geometria na relação e na chave de duplicidade, como já é feito no MapBiomas, e <b>apagar as relações da versão encerrada</b> no recálculo. Por isso RF18, RF20 e RN13 foram classificados como “atendidos com limitação”.</p>
+<p><b>Fala:</b> “Quando o limite de uma UC muda, o pipeline acrescenta o que passou a ficar dentro, mas não remove o que ficou de fora nem recalcula a área do que já estava relacionado, porque essas relações não guardam a versão da geometria. No MapBiomas isso já está resolvido. Nos dados apresentados nenhuma UC teve o limite trocado, então os resultados não são afetados. A correção é levar a versão para a relação, como no MapBiomas, e remover as relações da versão antiga.”</p>` },
   { q: "Por que a troca automática NRT → SP no FIRMS não foi feita",
     a: `<ul>
 <li><b>NRT</b> (tempo quase real) sai em horas; <b>SP</b> (processamento padrão) é a versão consolidada, publicada pela NASA <b>meses depois</b>.</li>
