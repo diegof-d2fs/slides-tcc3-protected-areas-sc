@@ -58,7 +58,14 @@ window.ROTEIRO_COLA = {
 <li><b>Sobreposição</b> (24 UCs): <b>+0,66%</b>, efeito do <code>paint</code>. Ex.: PE Serra Furada, 1.330,36 ha, dos quais 1.151,53 ha sobrepostos ao PARNA São Joaquim; o GEE dá 178,38 ha.</li>
 <li><b>Ambos</b> (7 UCs): −13,2%. Todas as comparáveis: −4,6%.</li>
 <li><b>Não avalia a acurácia temática</b> do MapBiomas: compara o cálculo de área, não se a classificação do pixel está certa.</li>
-</ul>` }
+</ul>` },
+  { q: "Fala direta: qual a diferença de metodologia entre os dois",
+    a: `<p>“Os dois calculam a área do mesmo jeito: somam a <b>área real de cada pixel</b>, sobre o <b>mesmo mapa</b> da Coleção 11, na <b>mesma grade</b>, sem reamostrar. Eu calculo a área do pixel no elipsoide WGS 84, linha a linha do raster; o GEE usa o <code>pixelArea</code>. Onde os pixels são os mesmos, as áreas batem: a maior diferença relativa foi de 1,5 × 10⁻⁵.</p>
+<p>A diferença está em <b>quais pixels</b> cada um soma, em três pontos:</p>
+<p><b>Primeiro, a borda.</b> Eu incluo o pixel quando o <b>centro</b> dele cai dentro do polígono. O GEE rasteriza a UC com o <code>paint</code>, que traça as arestas do seu próprio jeito. Isso muda poucos pixels de borda por UC, e é o que aparece na comparação direta.</p>
+<p><b>Segundo, o limite estadual.</b> Eu recorto cada UC pelo <b>limite de Santa Catarina do IBGE</b>; o GEE usa o polígono inteiro. Por isso, nas UCs costeiras e de divisa, o pipeline mede menos, principalmente água.</p>
+<p><b>Terceiro, a sobreposição.</b> Eu meço <b>cada UC inteira</b>, mesmo sobreposta a outra; no GEE cada pixel fica com <b>uma UC só</b>.</p>
+<p>O segundo e o terceiro são decisões de modelagem, conhecidas antes. Por isso a comparação direta usa só as 139 UCs sem nenhum dos dois casos.”</p>` }
  ],
  13: [
   { q: "Frase-chave (diga assim)",
